@@ -13,7 +13,8 @@
   },
 
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "https://hn.algolia.com/api/*"
   ],
 
   "browser_action": {
@@ -21,17 +22,11 @@
     "default_icon": {
       "16": "assets/icon-16.png",
       "32": "assets/icon-32.png",
-      "48": "assets/icon-48.png",
-      "64": "assets/icon-64.png"
+      "48": "assets/icon-48.png"
     },
     "default_title": "Click to find what HN says",
     "default_popup": "popup.html"
   },
-
-  "permissions": [
-    "https://hn.algolia.com/api/*",
-    "webRequest"
-  ],
 
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 

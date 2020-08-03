@@ -137,17 +137,17 @@ function render(data) {
   const hits = data.nbHits;
 
   if (!hits) {
-    let _node = `<li class="p2 my1"><p class="mb1">No results for this url.</p><p><button class="btn btn-small btn-primary h6 caps" data-link="https://news.ycombinator.com/submitlink?u=${_thisUrl}&t=${_thisTitle}">Submit to Hacker News</button></p></li>`;
+    let _node = `<li class="p2 my1"><p class="mb1">No results for this url.</p><p><button class="btn btn-small btn-primary h6 caps" data-link="https://news.ycombinator.com/submitlink?u=${encodeURIComponent(_thisUrl)}&t=${encodeURIComponent(_thisTitle)}">Submit to Hacker News</button></p></li>`;
     _node = utils.stringToDom(_node);
     $content.appendChild(_node);
-    return;
-  }
+
+  } else {
 
   const maxHits = (hits > 4) ? 4 : hits;
   let _node = '';
   for (let i = 0; i < maxHits; i++) {
     let _comments = data.hits[i].num_comments || 0;
-    let _related = ( cleanUrl(data.hits[i].url).replace(/\/+$/, '') !== _cleanUrl.replace(/\/+$/, '') ) ? `<span class="block h6 gray-4">For related url: <span class="monospace">${cleanUrl(data.hits[i].url)}</span></span>` : '';
+    let _related = ( cleanUrl(data.hits[i].url).replace(/\/+$/, '') !== _cleanUrl.replace(/\/+$/, '') ) ? `<span class="block h6 gray-4 truncate">For related url: <span class="monospace">${cleanUrl(data.hits[i].url)}</span></span>` : '';
     _node += `
         <li class="py1 px2 border-bottom border-gray-2 hover-gray" data-link="https://news.ycombinator.com/item?id=${data.hits[i].objectID}">
           <span class="block font-weight-600">${data.hits[i].title}</span>
@@ -163,10 +163,15 @@ function render(data) {
   _node = utils.stringToDom(_node);
   $content.appendChild(_node);
 
+  }
+
   document.querySelectorAll('[data-link]').forEach(
     _link => _link.addEventListener('click', (e) => {
     e.preventDefault();
-    window.open(_link.getAttribute('data-link'));
+    //window.open(_link.getAttribute('data-link'));
+    chrome.tabs.create({
+        url: _link.getAttribute('data-link')
+    });
     })
   );
 
