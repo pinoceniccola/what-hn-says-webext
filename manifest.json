@@ -13,8 +13,7 @@
   },
 
   "permissions": [
-    "activeTab",
-    "https://hn.algolia.com/api/*"
+    "activeTab"
   ],
 
   "browser_action": {
@@ -26,8 +25,6 @@
     },
     "default_title": "Click to find what HN says",
     "default_popup": "popup.html"
-  },
-
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+  }
 
 }
