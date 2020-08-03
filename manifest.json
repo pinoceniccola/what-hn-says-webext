@@ -1,0 +1,38 @@
+{
+  "manifest_version": 2,
+  "name": "What Hacker News Says",
+  "version": "0.1.0",
+  "description": "Easly find Hacker News discussions about the page on your current open tab. Hacked togheter with both privacy and performance in mind!",
+  "homepage_url": "https://github.com/pinoceniccola/what-hn-says-webext",
+  "icons": {
+    "16": "assets/icon-16.png",
+    "32": "assets/icon-32.png",
+    "48": "assets/icon-48.png",
+    "96": "assets/icon-96.png",
+    "256": "assets/icon-256.png"
+  },
+
+  "permissions": [
+    "activeTab"
+  ],
+
+  "browser_action": {
+    "browser_style": false,
+    "default_icon": {
+      "16": "assets/icon-16.png",
+      "32": "assets/icon-32.png",
+      "48": "assets/icon-48.png",
+      "64": "assets/icon-64.png"
+    },
+    "default_title": "Click to find what HN says",
+    "default_popup": "popup.html"
+  },
+
+  "permissions": [
+    "https://hn.algolia.com/api/*",
+    "webRequest"
+  ],
+
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+
+}
