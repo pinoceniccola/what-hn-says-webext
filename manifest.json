@@ -1,14 +1,15 @@
 {
   "manifest_version": 2,
   "name": "What Hacker News Says",
-  "version": "0.1.0",
-  "description": "Easly find Hacker News discussions about the page on your current open tab. Hacked togheter with both privacy and performance in mind!",
+  "version": "0.1.1",
+  "description": "Easly find Hacker News discussions about the page on your current open tab.",
   "homepage_url": "https://github.com/pinoceniccola/what-hn-says-webext",
   "icons": {
     "16": "assets/icon-16.png",
     "32": "assets/icon-32.png",
     "48": "assets/icon-48.png",
     "96": "assets/icon-96.png",
+    "128": "assets/icon-128.png",
     "256": "assets/icon-256.png"
   },
 
