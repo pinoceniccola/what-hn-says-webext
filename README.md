@@ -1,6 +1,6 @@
 ![What Hacker News says](assets/icon-256.png)
 # What Hacker News says
-Web Extension: Easly find Hacker News discussions about the page you're browsing.
+Web Extension: Easily find Hacker News discussions about the page you're browsing.
 
 ![Screenshot](assets/screenshot.png)
 
