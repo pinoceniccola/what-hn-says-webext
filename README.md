@@ -5,12 +5,12 @@ Web Extension: Easly find Hacker News discussions about the page on your current
 ![Screenshot](assets/screenshot.png)
 
 ## About
-Dead-simple web extension that look for discussions on [Hacker News](https://news.ycombinator.com/news) via [HN Search API Powered by Algolia](https://hn.algolia.com/api). I hacked togheter this in a few hours because I was unable to find something so simple: This web extension fetch the API only when the popup is clicked and does not run any background script. It also requires minimum permissions (just `activeTab` actually).
+Dead-simple web extension that look for discussions on [Hacker News](https://news.ycombinator.com/news) via [HN Search API powered by Algolia](https://hn.algolia.com/api). I hacked this togheter in a few hours because I was unable to find something so simple: This web extension fetch the API only when the popup is clicked and does not run any background script. It also requires minimum permissions (just `activeTab` actually).
 
 ## Install
-I'm submitting this to Firefox and Chrome stores, links will appear here.
+Get the extension for [Firefox](https://addons.mozilla.org/en-US/firefox/addon/what-hacker-news-says/) or [Chrome/Chromium](https://chrome.google.com/webstore/detail/what-hacker-news-says/khgegkjchclhgpglloficdmdannlpmoi) browsers.
 
-You can also clone this repo and run as an unpacked extension (but losing automatic future updates).
+You can also clone this repo and manually run as an unpacked extension (but losing automatic future updates).
 
 ## Changelog
 See [CHANGELOG.md](CHANGELOG.md).
