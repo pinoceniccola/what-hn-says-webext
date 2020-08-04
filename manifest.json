@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "What Hacker News Says",
   "version": "0.1.1",
-  "description": "Easly find Hacker News discussions about the page on your current open tab.",
+  "description": "Easily find Hacker News discussions about the page on your current open tab.",
   "homepage_url": "https://github.com/pinoceniccola/what-hn-says-webext",
   "icons": {
     "16": "assets/icon-16.png",
