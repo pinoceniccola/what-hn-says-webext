@@ -1,7 +1,9 @@
 
-const VERSION = "0.1.1";
+const manifest = chrome.runtime.getManifest();
 
-const ABOUT_URL = "https://github.com/pinoceniccola/what-hn-says-webext";
+const VERSION = manifest.version;
+
+const ABOUT_URL = manifest.homepage_url;
 
 const utils = {};
 
@@ -70,7 +72,7 @@ utils.timeSince = function(time) { // from https://stackoverflow.com/a/12475270
 
 async function askAlgolia(url) {
   url = encodeURIComponent(url);
-  let res = await fetch(`http://hn.algolia.com/api/v1/search?query=${url}&restrictSearchableAttributes=url&analytics=false`);
+  let res = await fetch(`https://hn.algolia.com/api/v1/search?query=${url}&restrictSearchableAttributes=url&analytics=false`);
   let data = await res.json();
   //data = JSON.stringify(data,null,'\t');
   return data;
@@ -89,7 +91,7 @@ function cleanUrl(url) {
 }
 
 
-utils.getId('version-label').textContent = "Ver: "+VERSION;
+utils.getId('version-label').textContent = "Ver. "+VERSION;
 
 utils.getId('about-link').addEventListener('click', (e) => {
     e.preventDefault();
