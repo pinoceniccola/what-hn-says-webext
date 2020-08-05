@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to `What Hacker News Says` will be documented in this file.
 
+## Unrelesed
+### Added
+- UI: More subtle neutral colors
+
 ## 0.1.2 - 2020-08-04
 ### Fixed
 - JS: API endpoint uses HTTPS (!)
