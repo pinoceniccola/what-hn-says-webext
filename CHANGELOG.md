@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to `What Hacker News Says` will be documented in this file.
 
-## Unrelesed
+## Unreleased
 ### Added
 - UI: More subtle neutral colors
 
