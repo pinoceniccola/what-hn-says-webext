@@ -1,10 +1,6 @@
 
 const manifest = chrome.runtime.getManifest();
 
-const VERSION = manifest.version;
-
-const ABOUT_URL = manifest.homepage_url;
-
 const utils = {};
 
 utils.getId = function(id){
@@ -16,18 +12,6 @@ utils.stringToDom = function(string){
 }
 
 utils.timeSince = function(time) { // from https://stackoverflow.com/a/12475270
-  switch (typeof time) {
-    case 'number':
-      break;
-    case 'string':
-      time = +new Date(time);
-      break;
-    case 'object':
-      if (time.constructor === Date) time = time.getTime();
-      break;
-    default:
-      time = +new Date();
-  }
   var time_formats = [
     [60, 'seconds', 1], // 60
     [120, '1 minute ago', '1 minute from now'], // 60*2
@@ -41,9 +25,7 @@ utils.timeSince = function(time) { // from https://stackoverflow.com/a/12475270
     [4838400, 'Last month', 'Next month'], // 60*60*24*7*4*2
     [29030400, 'months', 2419200], // 60*60*24*7*4*12, 60*60*24*7*4
     [58060800, 'Last year', 'Next year'], // 60*60*24*7*4*12*2
-    [2903040000, 'years', 29030400], // 60*60*24*7*4*12*100, 60*60*24*7*4*12
-    [5806080000, 'Last century', 'Next century'], // 60*60*24*7*4*12*100*2
-    [58060800000, 'centuries', 2903040000] // 60*60*24*7*4*12*100*20, 60*60*24*7*4*12*100
+    [2903040000, 'years', 29030400] // 60*60*24*7*4*12*100, 60*60*24*7*4*12
   ];
   var seconds = (+new Date() - time) / 1000,
     token = 'ago',
@@ -70,11 +52,11 @@ utils.timeSince = function(time) { // from https://stackoverflow.com/a/12475270
 }
 
 
+
 async function askAlgolia(url) {
   url = encodeURIComponent(url);
   let res = await fetch(`https://hn.algolia.com/api/v1/search?query=${url}&restrictSearchableAttributes=url&analytics=false`);
   let data = await res.json();
-  //data = JSON.stringify(data,null,'\t');
   return data;
 }
 
@@ -91,19 +73,24 @@ function cleanUrl(url) {
 }
 
 
-utils.getId('version-label').textContent = "Ver. "+VERSION;
+
+utils.getId('version-label').textContent = "Ver. " + manifest.version;
 
 utils.getId('about-link').addEventListener('click', (e) => {
     e.preventDefault();
-    window.open(ABOUT_URL);
+    chrome.tabs.create({
+      url: manifest.homepage_url
+    });
 });
+
+
 
 const $content = utils.getId('content');
 let _thisUrl = false;
 let _thisTitle = false;
 let _cleanUrl = false;
 
-chrome.tabs.query({active:true,currentWindow:true}, function(tabs){
+chrome.tabs.query({active:true,currentWindow:true}, (tabs) => {
   _thisUrl = tabs[0].url;
   _thisTitle = tabs[0].title;
   //_thisFavicon = tabs[0].favIconUrl;
@@ -113,11 +100,7 @@ chrome.tabs.query({active:true,currentWindow:true}, function(tabs){
 
     utils.getId('url-label').textContent = _cleanUrl;
 
-    askAlgolia(_cleanUrl).then(
-      (data) => {
-        //console.log('results',data);
-        render(data);
-    });
+    askAlgolia(_cleanUrl).then(render).catch(render);
 
   } else {
     render(false);
@@ -131,51 +114,53 @@ function render(data) {
    $content.removeChild($content.lastChild);
   }
 
+  if (data instanceof Error) {
+    $content.appendChild( utils.stringToDom(`<li class="p2 my1"><p class="mb1">Sorry, something went wrong with the Algolia API call:</p><pre class="m0">${data.message}</pre></li>`) );
+    return; 
+  }
+
   if (!data) {
     $content.appendChild( utils.stringToDom(`<li class="p2 my1"><p class="mb1">Sorry, not a valid url: </p><pre class="m0">${_thisUrl}</pre></li>`) );
     return;
   }
 
   const hits = data.nbHits;
+  let _node = '';
 
   if (!hits) {
-    let _node = `<li class="p2 my1"><p class="mb1">No results for this url.</p><p><button class="btn btn-small btn-primary h6 uppercase" data-link="https://news.ycombinator.com/submitlink?u=${encodeURIComponent(_thisUrl)}&t=${encodeURIComponent(_thisTitle)}">Submit to Hacker News</button></p></li>`;
-    _node = utils.stringToDom(_node);
-    $content.appendChild(_node);
+
+    _node = `<li class="p2 my1"><p class="mb1">No results for this url.</p><p class="m0"><button class="btn btn-small btn-primary h6 uppercase" data-link="https://news.ycombinator.com/submitlink?u=${encodeURIComponent(_thisUrl)}&t=${encodeURIComponent(_thisTitle)}">Submit to Hacker News</button></p></li>`;
 
   } else {
 
     const maxHits = (hits > 4) ? 4 : hits;
-    let _node = '';
+
     for (let i = 0; i < maxHits; i++) {
-      let _comments = data.hits[i].num_comments || 0;
       let _related = ( cleanUrl(data.hits[i].url).replace(/\/+$/, '') !== _cleanUrl.replace(/\/+$/, '') ) ? `<span class="block h6 gray-4 truncate">For related url: <span class="monospace">${cleanUrl(data.hits[i].url)}</span></span>` : '';
       _node += `
           <li class="py1 px2 border-bottom border-gray-2 hover-gray" data-link="https://news.ycombinator.com/item?id=${data.hits[i].objectID}">
             <span class="block font-weight-600">${data.hits[i].title}</span>
-            <span class="block h6 gray-4"><strong class="red">${data.hits[i].points}</strong> points • <strong class="red">${_comments}</strong> comments • by <strong>${data.hits[i].author}</strong> • ${utils.timeSince(data.hits[i].created_at_i*1000)}</span>
+            <span class="block h6 gray-4"><strong class="red">${data.hits[i].points}</strong> points • <strong class="red">${data.hits[i].num_comments || 0}</strong> comments • by <strong>${data.hits[i].author}</strong> • ${utils.timeSince(data.hits[i].created_at_i*1000)}</span>
             ${_related}
           </li>`;
     }
 
     if (hits > 4) {
-      _node += `<li class="py1 px2"><button class="btn btn-small red h6 px0 weight-400" data-link="https://hn.algolia.com/?query=${data.query}">See all ${hits} stories on Algolia</button></li>`;
+      _node += `<li class="py1 px2"><button class="btn btn-small red h6 px0 weight-400" data-link="https://hn.algolia.com/?query=${encodeURIComponent(data.query)}">See all ${hits} stories on Algolia</button></li>`;
     }
-
-    _node = utils.stringToDom(_node);
-    $content.appendChild(_node);
 
   }
 
+  _node = utils.stringToDom(_node);
+  $content.appendChild(_node);
+
   document.querySelectorAll('[data-link]').forEach(
     _link => _link.addEventListener('click', (e) => {
-    e.preventDefault();
-    //window.open(_link.getAttribute('data-link'));
-    chrome.tabs.create({
+      e.preventDefault();
+      chrome.tabs.create({
         url: _link.getAttribute('data-link')
-    });
+      });
     })
   );
 
 }
-

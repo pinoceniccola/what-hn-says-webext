@@ -1,9 +1,11 @@
 # Changelog
 All notable changes to `What Hacker News Says` will be documented in this file.
 
-## Unreleased
+## Unreleased
 ### Added
 - UI: More subtle neutral colors
+- JS: Better error handling
+- JS: bits of code cleaning
 
 ## 0.1.2 - 2020-08-04
 ### Fixed
