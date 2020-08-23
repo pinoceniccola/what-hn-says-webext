@@ -116,7 +116,7 @@ function render(data) {
 
   if (data instanceof Error) {
     $content.appendChild( utils.stringToDom(`<li class="p2 my1"><p class="mb1">Sorry, something went wrong with the Algolia API call:</p><pre class="m0">${data.message}</pre></li>`) );
-    return; 
+    return;
   }
 
   if (!data) {
