@@ -56,11 +56,17 @@ utils.timeSince = function(time) { // from https://stackoverflow.com/a/12475270
 
 
 async function askAlgolia(url) {
+  // handle special case of www/no-www versions
+  // here because it helps find more results but it's not strictly url canonicalization,
+  // so results without www will eventually show up as "related url"
+  url = url.startsWith('www.') ? url.replace(/www\./,'') : url;
+
   url = encodeURIComponent(url);
   let res = await fetch(`https://hn.algolia.com/api/v1/search?query=${url}&restrictSearchableAttributes=url&analytics=false`);
   let data = await res.json();
   return data;
 }
+
 
 function cleanUpParameters(url) {
   const urlObj = new URL(url);
@@ -86,13 +92,15 @@ function cleanUpParameters(url) {
 }
 
 function cleanUrl(url) {
-  // clean up analytics-related params
-  url = cleanUpParameters(url);
+  // (maybe) clean up analytics-related params
+  url = (url.includes('?')) ? cleanUpParameters(url) : url;
   // strip protocol for better results
   url = url.replace(/(^\w+:|^)\/\//, '');
   // also, strip anchors
   url = url.replace(/(#.+?)$/, '');
-  // also, strip single leading slash
+  // also, strip index.php/html
+  url = url.replace(/index\.(php|html?)/, '');
+  // also, strip single leading slash, e.g. example.com/ -> example.com
   url = (url.endsWith("/") && url.split("/").length < 3) ? url.replace(/\/+$/, '') : url;
   return url;
 }
@@ -124,6 +132,8 @@ chrome.tabs.query({active:true,currentWindow:true}, (tabs) => {
     _cleanUrl = cleanUrl(_thisUrl);
 
     utils.getId('url-label').textContent = _cleanUrl;
+    // This will show the full url on mouse hover when it's truncated (too long)
+    utils.getId('url-label').title = _cleanUrl;
 
     askAlgolia(_cleanUrl).then(render).catch(render);
 
