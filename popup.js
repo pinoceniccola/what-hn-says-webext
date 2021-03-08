@@ -3,6 +3,8 @@ const manifest = chrome.runtime.getManifest();
 
 const utils = {};
 
+const BLACKLISTED_PARAMS = ['utm_','clid'];
+
 utils.getId = function(id){
     return document.getElementById(id);
 }
@@ -60,9 +62,32 @@ async function askAlgolia(url) {
   return data;
 }
 
+function cleanUpParameters(url) {
+  const urlObj = new URL(url);
+  const params = urlObj.searchParams;
+  const blacklistedKeys = []
 
+  for (const key of params.keys()){
+    if (BLACKLISTED_PARAMS.some((entry) => key.includes(entry))){
+      // Can't delete directly since it will mess up the iterator order
+      // Saving it temporarily to delete later
+      blacklistedKeys.push(key)
+    }
+  }
+
+  for (const key of blacklistedKeys){
+    params.delete(key)
+  }
+
+  // Reconstruct search params after cleaning up
+  urlObj.search = params.toString()
+
+  return urlObj.toString()
+}
 
 function cleanUrl(url) {
+  // clean up analytics-related params
+  url = cleanUpParameters(url);
   // strip protocol for better results
   url = url.replace(/(^\w+:|^)\/\//, '');
   // also, strip anchors
