@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to `What Hacker News Says` will be documented in this file.
 
+## 0.2.0 - 2021-03-08
+### Fixed
+- JS: Better URL canonicalization (handles no-www version, strips analitycs related query params)
+
 ## 0.1.3 - 2020-08-23
 ### Added
 - UI: More subtle neutral colors
