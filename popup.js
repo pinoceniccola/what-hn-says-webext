@@ -3,7 +3,7 @@ const manifest = chrome.runtime.getManifest();
 
 const utils = {};
 
-const BLACKLISTED_PARAMS = ['utm_','clid'];
+const BLACKLISTED_PARAMS = ['utm_', 'clid', 'ref'];
 
 utils.getId = function(id){
     return document.getElementById(id);
