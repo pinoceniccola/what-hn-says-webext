@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to `What Hacker News Says` will be documented in this file.
 
+## 0.2.1 - 2025-02-27
+### Fixed
+- Switched to Manifest v3 because Google said so
+### Added
+- JS: Added 'ref' to the blacklisted query params
+
 ## 0.2.0 - 2021-03-08
 ### Fixed
 - JS: Better URL canonicalization (handles no-www version, strips analitycs related query params)
