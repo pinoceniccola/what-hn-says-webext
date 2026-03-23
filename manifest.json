@@ -4,6 +4,7 @@
   "version": "0.2.1",
   "description": "Easily find Hacker News threads about the page you're currently browsing.",
   "homepage_url": "https://github.com/pinoceniccola/what-hn-says-webext",
+  "id": "what-hn-says@pinoceniccola",
   "icons": {
     "16": "assets/icon-16.png",
     "32": "assets/icon-32.png",
@@ -13,9 +14,8 @@
     "256": "assets/icon-256.png"
   },
 
-  "permissions": [
-    "activeTab"
-  ],
+  "data_collection_permissions": [],
+  "permissions": ["activeTab"],
 
   "action": {
     "default_icon": {
@@ -26,5 +26,4 @@
     "default_title": "Click to find what HN says",
     "default_popup": "popup.html"
   }
-
 }
