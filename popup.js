@@ -54,13 +54,11 @@ utils.timeSince = function (time) {
   return time;
 };
 
-utils.isMobile = function () {
-  const userAgent = navigator.userAgent;
-  return (
-    userAgent.includes("Firefox") &&
-    (userAgent.includes("Mobile") || userAgent.includes("Android"))
-  );
-};
+utils.isMobile = navigator.userAgent.toLowerCase().includes("mobi");
+
+if (utils.isMobile) {
+  document.body.classList.add('mobile');
+}
 
 async function askAlgolia(url) {
   // handle special case of www/no-www versions
